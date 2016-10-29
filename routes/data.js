@@ -6,20 +6,36 @@ router.use(function(req, res, next) {
     next()
 })
 
-router.get('/user/:uid', function(req, res) {
-    var uid = req.params.uid
-    var random = req.query.var
-    res.json({uid: uid, random: random})
+router.get('/user/:houseId/:uid', function(req, res){
+
+    var ref = firebase.database().ref(`/houses/${req.params.houseId}/users/${req.params.uid}`)
+    ref.once('value', function(snapshot){
+      res.json(snapshot.val())
+    })
+
+
 })
 
-router.get('/room/:roomId', function(req, res) {
-    var roomId = req.params.roomId
-    res.json({roomId: roomId})
+router.get('/room/:houseId/:roomId', function(req, res) {
+
+    var ref = firebase.database().ref(`/houses/${req.params.houseId}/rooms/${req.params.roomId}`)
+    ref.once('value', function(snapshot){
+      res.json(snapshot.val())
+    })
 })
 
-router.get('/schedule/:houseId', function(req, res) {
-    var houseId = req.params.houseId
-    res.json({houseId: houseId})
+router.get('/schedule/:houseId/', function(req, res) {
+
+    var ref = firebase.database().ref(`/houses/${req.params.houseId}`)
+    ref.once('value', function(snapshot){
+
+      if(req.query.day != null){
+        res.json(snapshot.val().schedule[req.query.day])
+      }
+      else {
+        res.json(snapshot.val().schedule)
+      }
+    })
 })
 
 module.exports = router
