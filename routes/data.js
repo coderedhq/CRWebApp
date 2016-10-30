@@ -10,7 +10,7 @@ router.get('/user/:houseId/:uid', function(req, res){
 
     var ref = firebase.database().ref(`/houses/${req.params.houseId}/users/${req.params.uid}`)
     ref.once('value', function(snapshot){
-      res.json(snapshot.val())
+      res.json(snapshot.key)
     })
 
 

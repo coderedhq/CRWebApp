@@ -1,19 +1,21 @@
 var firebase = require('firebase')
+var exports = module.exports = {}
 
-const days = [
-    'sunday',
-    'monday',
-    'tuesday',
-    'wednesday',
-    'thursday',
-    'friday',
-    'saturday'
-]
 
-export function setStateFromSchedule(temp, ref) {
+
+exports.setStateFromSchedule = function(temp, ref) {
+    const days = [
+        'sunday',
+        'monday',
+        'tuesday',
+        'wednesday',
+        'thursday',
+        'friday',
+        'saturday'
+    ]
     var schedule
     var date = new Date(Date.now())
-    var hour = date.getHour()
+    var hour = date.getHours()
     var day = days[date.getDay()]
 
     ref.parent.parent.once('value', function(snapshot) {
@@ -22,18 +24,21 @@ export function setStateFromSchedule(temp, ref) {
 
     var scheduledPreference = schedule[day][hour]
 
-    setStateFromPreferences(temp, scheduledPreference, ref)
+    exports.setStateFromPreferences(temp, scheduledPreference, ref)
 }
 
-export function setStateFromPreferences(temp, preference, ref) {
-    if (preference.range = '-') {
-        if (preference.temp > temp) {
+exports.setStateFromPreferences = function(temp, preference, ref) {
+    //console.log(temp, preference, ref)
+    console.log(preference)
+    if (preference.range == '-') {
+        if (temp > preference.temp) {
             ref.update({state: true, action: 'cool'})
         } else {
             ref.update({state: false})
         }
-    } else if (preference.range = '+') {
-        if (preference.temp < temp) {
+    } else if (preference.range == '+') {
+        console.log('+ here')
+        if (temp < preference.temp) {
             ref.update({state: true, action: 'heat'})
         } else {
             ref.update({state: false})
@@ -52,7 +57,7 @@ export function setStateFromPreferences(temp, preference, ref) {
     }
 }
 
-export function checkForAdmin(users) {
+exports.checkForAdmin = function(users) {
     for (var i = 0; i < users.length; i++) {
         if (users[i].admin) {
             return users[i]
