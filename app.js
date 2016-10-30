@@ -15,9 +15,12 @@ firebase.initializeApp(config)
 var dataRouter = require('./routes/data.js')
 var imageRouter = require('./routes/image.js')
 var piRouter = require('./routes/pi.js')
+var webRouter = require('./routes/web.js')
 
 app.use('/', express.static('public'))
 app.use('/assets', express.static('assets'))
+
+app.use('/web', webRouter)
 
 app.use('/api/data/', dataRouter)
 app.use('/api/image/', imageRouter)
