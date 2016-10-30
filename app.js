@@ -16,10 +16,8 @@ var dataRouter = require('./routes/data.js')
 var imageRouter = require('./routes/image.js')
 var piRouter = require('./routes/pi.js')
 
-app.get('/', function(req, res) {
-    var database = firebase.database().ref('/')
-    res.json({testing: true})
-})
+app.use('/', express.static('public'))
+app.use('/assets', express.static('assets'))
 
 app.use('/api/data/', dataRouter)
 app.use('/api/image/', imageRouter)
