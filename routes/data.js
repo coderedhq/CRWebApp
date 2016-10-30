@@ -75,4 +75,14 @@ router.get('/houses', function(req, res) {
     })
 })
 
+router.put('/user/update', function(req, res){
+    var ref = firebase.database().ref(`/houses/${req.body.houseId}/users/${req.body.uid}`)
+    ref.update({
+      preferences: {
+        temp: req.body.temp,
+        range: req.body.range
+      }
+    })
+})
+
 module.exports = router

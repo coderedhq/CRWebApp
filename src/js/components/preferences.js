@@ -9,7 +9,9 @@ export default class Preferences extends Component
           houseId: '',
           name: '',
           admin: false,
-          preferences: null
+          preferences: null,
+          temp: '',
+          range: ''
       }
     }
     componentDidMount() {
@@ -36,7 +38,9 @@ export default class Preferences extends Component
                 this.setState({
                     name: result.name,
                     admin: result.admin,
-                    preferences: result.preferences
+                    preferences: result.preferences,
+                    temp: result.preferences.temp,
+                    range: result.preferences.range
                 }, () => {
                     console.log(this.state.preferences)
                 })
@@ -46,6 +50,32 @@ export default class Preferences extends Component
             }
         })
     }
+    updatePrefs(){
+      $.ajax({
+          method: 'PUT',
+          url: '/api/data/user/update',
+          data: {uid: this.props.params.uid, houseId: this.state.houseId, },
+          dataType: 'json',
+          success: (result) => {
+              console.log(result)
+              this.setState({authenticated: true, uid: result.uid})
+          },
+          error: function(err) {
+              console.error(err)
+          }
+      })
+    }
+    handleChange(event){
+        this.setState({
+            temp: event.target.value
+        })
+    }
+    handleSelect(event){
+      this.setState({
+        range: event.target.value
+      })
+    }
+
     showUserData() {
         if (this.state.name !== '') {
             return (
@@ -56,7 +86,13 @@ export default class Preferences extends Component
                     </div>
                     <div className="col-md-6">
                         <p><strong>Temperature Preferences</strong></p>
-                        {this.displayTempPrefs()}
+                        <input type="text" value={this.state.temp} onChange={::this.handleChange}/>
+                        <select value={this.state.range} onChange={::this.handleSelect}>
+                            <option value='+'>Keep Above</option>
+                            <option value='-'>Keep Below</option>
+                            <option value='range'>Keep between</option>
+                        </select>
+                        <button onClick={this.updatePrefs}>Submit</button>
                     </div>
                 </div>
             )
